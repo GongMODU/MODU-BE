@@ -1,7 +1,7 @@
 ---
-name: Custom issue template
-about: Describe this issue template's purpose here.
-title: ''
+name: "✨ Feature"
+about: 새로운 기능 추가
+title: "[Feat] 이슈 제목"
 labels: ''
 assignees: mxyffff, reeyr
 
