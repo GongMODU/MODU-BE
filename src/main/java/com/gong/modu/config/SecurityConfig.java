@@ -15,8 +15,13 @@ public class SecurityConfig {
                 // CSRF 비활성화
                 .csrf(csrf -> csrf.disable())
 
-                // 모든 요청 일단 허용함
+                // 모든 요청 일단 허용함 (Swagger UI 포함)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .anyRequest().permitAll()
                 )
 
