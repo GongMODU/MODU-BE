@@ -52,21 +52,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         final String finalProviderUserId = providerUserId;
         final String finalEmail = email != null
                 ? email
-                : provider.name().toLowerCase() + "_" + providerUserId + "@modu.com";
+                : provider.name().toLowerCase() + "_" + providerUserId;
         final String finalNickname = (nickname == null || userRepository.existsByNickname(nickname))
                 ? "user_" + UUID.randomUUID().toString().substring(0, 8)
                 : nickname;
         final Provider finalProvider = provider;
 
         User user = userRepository.findByProviderAndProviderUserId(provider, providerUserId)
-                .orElseGet(() -> userRepository.save(
-                        User.builder()
-                                .email(finalEmail)
-                                .nickname(finalNickname)
-                                .provider(finalProvider)
-                                .providerUserId(finalProviderUserId)
-                                .build()
-                ));
+                .orElseGet(() -> userRepository.findByEmail(finalEmail)
+                        .orElseGet(() -> userRepository.save(
+                                User.builder()
+                                        .email(finalEmail)
+                                        .nickname(finalNickname)
+                                        .provider(finalProvider)
+                                        .providerUserId(finalProviderUserId)
+                                        .build()
+                        )));
 
         return new CustomOAuth2User(user, attributes);
     }
