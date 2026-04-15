@@ -30,9 +30,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
         User user = oAuth2User.getUser();
 
-        String accessToken = jwtUtil.generateAccessToken(
-                user.getId(), user.getEmail(), user.getRole().name()
-        );
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
         redisUtil.saveRefreshToken(user.getId(), refreshToken, jwtUtil.getRefreshTokenExpiration());
 
