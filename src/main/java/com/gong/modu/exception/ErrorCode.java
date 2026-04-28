@@ -24,6 +24,9 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+    NICKNAME_UNCHANGED(HttpStatus.BAD_REQUEST, "현재 닉네임과 동일합니다."),
+    PASSWORD_CONFIRM_MISMATCH(HttpStatus.BAD_REQUEST, "새 비밀번호와 확인 비밀번호가 일치하지 않습니다."),
+    SOCIAL_LOGIN_NOT_SUPPORTED_FOR_PASSWORD_UPDATE(HttpStatus.BAD_REQUEST, "소셜 로그인 계정은 비밀번호를 변경할 수 없습니다."),
 
     // Investment Profile
     PERSONA_TYPE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "페르소나 유형 데이터를 찾을 수 없습니다."),
