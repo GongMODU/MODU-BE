@@ -25,6 +25,9 @@ public enum ErrorCode {
     // User
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
 
+    // Investment Profile
+    PERSONA_TYPE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "페르소나 유형 데이터를 찾을 수 없습니다."),
+
     // Common
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다.");
 
