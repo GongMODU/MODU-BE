@@ -30,7 +30,7 @@ public class EmailVerificationCode {
     @Column(nullable = false, length = 6)
     private String code;
 
-    @Column(name = "expires_at")
+    @Column(name = "expires_at", nullable = false)
     private LocalDateTime expiresAt;
 
     // 인증 완료된 시각 (null이면 아직 미인증)

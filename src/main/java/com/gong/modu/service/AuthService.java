@@ -207,9 +207,7 @@ public class AuthService {
 
     // ────────── 공통: 토큰 발급 ──────────
     private AuthResponse issueTokens(User user) {
-        String accessToken = jwtUtil.generateAccessToken(
-                user.getId(), user.getEmail(), user.getRole().name()
-        );
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getEmail());
         String refreshToken = jwtUtil.generateRefreshToken(user.getId());
 
         redisUtil.saveRefreshToken(user.getId(), refreshToken, jwtUtil.getRefreshTokenExpiration());
@@ -220,7 +218,6 @@ public class AuthService {
                 .userId(user.getId())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .role(user.getRole().name())
                 .build();
     }
 }

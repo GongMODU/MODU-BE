@@ -30,11 +30,10 @@ public class JwtUtil {
         this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
-    public String generateAccessToken(Long userId, String email, String role) {
+    public String generateAccessToken(Long userId, String email) {
         return Jwts.builder()
                 .subject(String.valueOf(userId))
                 .claim("email", email)
-                .claim("role", role)
                 .claim("type", "access")
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
@@ -72,10 +71,6 @@ public class JwtUtil {
 
     public String getEmail(String token) {
         return parseClaims(token).get("email", String.class);
-    }
-
-    public String getRole(String token) {
-        return parseClaims(token).get("role", String.class);
     }
 
     public boolean isTokenExpired(String token) {
