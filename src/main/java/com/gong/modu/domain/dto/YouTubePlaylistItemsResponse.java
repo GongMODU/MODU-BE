@@ -12,6 +12,7 @@ public record YouTubePlaylistItemsResponse(
     ) {}
     public record Snippet(
             OffsetDateTime publishedAt,
+            String channelTitle,
             String title,
             String description,
             ResourceId resourceId

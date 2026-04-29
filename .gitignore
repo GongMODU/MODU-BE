@@ -51,6 +51,9 @@ replay_pid*
 /nbdist/
 /.nb-gradle/
 
+# Python
+.venv/
+
 # BlueJ
 *.ctxt
 

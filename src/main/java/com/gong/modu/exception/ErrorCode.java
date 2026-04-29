@@ -40,7 +40,10 @@ public enum ErrorCode {
     // YouTube
     CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "채널을 찾을 수 없습니다."),
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "재생목록을 찾을 수 없습니다."),
-    VIDEO_NOT_FOUND(HttpStatus.NOT_FOUND, "선택 가능한 YouTube 영상이 없습니다.");
+    VIDEO_NOT_FOUND(HttpStatus.NOT_FOUND, "선택 가능한 YouTube 영상이 없습니다."),
+    VIDEO_POOL_EMPTY(HttpStatus.NOT_FOUND, "수집된 영상이 없습니다."),          // ← 추가
+    TRANSCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "자막이 있는 영상을 찾지 못했습니다.");
+
 
 
     private final HttpStatus httpStatus;

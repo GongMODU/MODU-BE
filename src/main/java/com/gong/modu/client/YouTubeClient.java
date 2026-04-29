@@ -89,6 +89,7 @@ public class YouTubeClient {
                 .filter(item -> item.snippet().resourceId().videoId() != null)
                 .map(item -> new YouTubeVideoSummary(
                         channelId,
+                        item.snippet().channelTitle(),
                         item.snippet().resourceId().videoId(),
                         item.snippet().title(),
                         item.snippet().publishedAt()

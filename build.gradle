@@ -60,6 +60,9 @@ dependencies {
 
 	// Swagger (SpringDoc OpenAPI)
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
+
+	// python
+	implementation 'org.python:jython-slim:2.7.4rc1'
 }
 
 tasks.named('test') {

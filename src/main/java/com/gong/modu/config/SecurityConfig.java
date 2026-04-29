@@ -48,7 +48,9 @@ public class SecurityConfig {
                                 "/test",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
-                                "/swagger-ui.html"
+                                "/swagger-ui.html",
+                                // YouTube 자막 추출 검증용 API는 로그인 없이 접근 허용
+                                "/api/youtube/random-transcript"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
