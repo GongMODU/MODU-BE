@@ -7,7 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 // API 호출 테스트용
-@Component
+// @Component
 public class YoutubeApiTestRunner implements CommandLineRunner {
     private final YouTubeClient youTubeClient;
     private final YouTubeProperties properties;
