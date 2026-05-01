@@ -30,6 +30,10 @@ public class AnthropicService {
     private static final String MESSAGES_ENDPOINT = "/v1/messages";
 
     public String call(List<AnthropicMessageDto> messages) {
+        return call(messages, maxTokens);
+    }
+
+    public String call(List<AnthropicMessageDto> messages, int maxTokens) {
         AnthropicRequestDto request = AnthropicRequestDto.builder()
                 .model(model)
                 .maxTokens(maxTokens)

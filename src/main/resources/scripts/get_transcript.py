@@ -1,5 +1,10 @@
+import warnings
+warnings.filterwarnings('ignore')
+
 import json
 import sys
+import requests
+from http.cookiejar import MozillaCookieJar
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import (
     NoTranscriptFound,
@@ -17,9 +22,17 @@ def main():
         sys.exit(1)
 
     video_id = sys.argv[1]
+    cookies_path = sys.argv[2] if len(sys.argv) >= 3 else None
 
     try:
-        ytt_api = YouTubeTranscriptApi()
+        if cookies_path:
+            session = requests.Session()
+            jar = MozillaCookieJar(cookies_path)
+            jar.load(ignore_discard=True, ignore_expires=True)
+            session.cookies = jar
+            ytt_api = YouTubeTranscriptApi(http_client=session)
+        else:
+            ytt_api = YouTubeTranscriptApi()
         transcript_list = ytt_api.list(video_id)  # ← 1.x는 list()
 
         transcript = None

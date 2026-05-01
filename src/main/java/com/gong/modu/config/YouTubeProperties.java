@@ -12,6 +12,7 @@ public class YouTubeProperties {
     private List<String> channelIds;
     private int latestVideoCountPerChannel = 5;
     private int transcriptRetryCount = 10;
+    private String cookiesPath;
 
     public String getApiKey() {
         return apiKey;
@@ -43,5 +44,13 @@ public class YouTubeProperties {
 
     public void setTranscriptRetryCount(int transcriptRetryCount) {
         this.transcriptRetryCount = transcriptRetryCount;
+    }
+
+    public String getCookiesPath() {
+        return cookiesPath;
+    }
+
+    public void setCookiesPath(String cookiesPath) {
+        this.cookiesPath = cookiesPath;
     }
 }
