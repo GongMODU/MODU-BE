@@ -46,7 +46,6 @@ public class AuthService {
 
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    // ────────── 이메일 인증코드 발송 ──────────
     @Transactional
     public void sendEmailVerificationCode(EmailVerificationRequest request) {
         String email = request.getEmail();
@@ -89,7 +88,7 @@ public class AuthService {
                 .ifPresent(EmailVerificationCode::verify);
     }
 
-    // ────────── 회원가입 ──────────
+    // 회원가입
     @Transactional
     public void signup(LocalSignupRequest request) {
         String email = request.getEmail();
