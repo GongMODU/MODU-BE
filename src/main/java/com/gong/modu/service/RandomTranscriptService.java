@@ -17,16 +17,16 @@ import java.util.List;
 public class RandomTranscriptService {
 
     private final YouTubeVideoService youTubeVideoService; // 최신 영상 중 랜덤 영상 선택하는 클래스
-    private final TranscriptExtractor transcriptExtractor; //  Python 스크립트를 실행해서 자막 가져오는 클래스
+    private final CachedTranscriptService cachedTranscriptService; // 변경
     private final YouTubeProperties properties; // YouTube 관련 설정값을 application.properties에서 읽어오는 클래스
 
     public RandomTranscriptService(
             YouTubeVideoService youTubeVideoService,
-            TranscriptExtractor transcriptExtractor,
+            CachedTranscriptService cachedTranscriptService,
             YouTubeProperties properties
     ) {
         this.youTubeVideoService = youTubeVideoService;
-        this.transcriptExtractor = transcriptExtractor;
+        this.cachedTranscriptService = cachedTranscriptService;
         this.properties = properties;
     }
 
@@ -58,7 +58,9 @@ public class RandomTranscriptService {
                     video.title()
             );
 
-            TranscriptResult transcript = transcriptExtractor.extract(video.videoId());
+            // TranscriptExtractor를 직접 호출 방식에서 CachedTranscriptService를 통해 조회하는 방식으로 변경
+            // 같은 videoId에 대한 자막이 이미 Redis에 있으면 Python 스크립트를 다시 실행하지 않고 캐시된 자막을 바로 가져옴
+            TranscriptResult transcript = cachedTranscriptService.getTranscript(video.videoId());
 
             if (isValidTranscript(transcript)) {
                 log.info("자막 추출 성공. channelTitle={}, videoId={}, language={}, transcriptType={}",

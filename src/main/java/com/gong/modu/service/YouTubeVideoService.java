@@ -5,6 +5,7 @@ import com.gong.modu.config.YouTubeProperties;
 import com.gong.modu.domain.dto.YouTubeVideoSummary;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -26,6 +27,11 @@ public class YouTubeVideoService {
     }
 
     // application.properties에 등록된 모든 채널에서 최신 영상을 가져와 하나의 pool로 합침
+    // Redis에 캐싱하는 부분 추가 (TTL: 30분)
+    @Cacheable(
+            cacheNames = "youtubeLatestVideos",
+            key = "'pool'"
+    )
     public List<YouTubeVideoSummary> collectLatestVideoPool() {
         List<YouTubeVideoSummary> pool = new ArrayList<>();
 
@@ -50,11 +56,10 @@ public class YouTubeVideoService {
         return pool.get(index);
     }
 
-    // 자막 없는 영상이 있을 수 있으므로 매번 같은 순서로 검사하지 않도록 pool을 섞어서 반환
+    // 자막 없는 영상이 있을 수 있으므로 최신 영상 pool을 가져온 뒤 랜덤 순서로 섞어서 반환
     public List<YouTubeVideoSummary> collectShuffledLatestVideoPool() {
         List<YouTubeVideoSummary> pool = new ArrayList<>(collectLatestVideoPool());
         Collections.shuffle(pool, random);
         return pool;
     }
-
 }
