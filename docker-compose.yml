@@ -11,9 +11,6 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
 
-    ports:
-      - "${DB_PORT}:5432"
-
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -23,41 +20,76 @@ services:
       timeout: 5s
       retries: 5
 
+    networks:
+      - backend-network
+
   # Redis
   redis:
     image: redis:7
     container_name: gong-redis
     restart: unless-stopped
 
-    ports:
-      - "${REDIS_PORT}:6379"
-
     volumes:
       - redis_data:/data
 
-    # $$ 로 쓴 이유:
-    # docker-compose 내부에서 $는 환경변수 치환에 사용되므로 쉘 내부로 실제 $를 넘기기 위해 $$를 사용
-    command: >
-      sh -c '
-      if [ -n "$$REDIS_PASSWORD" ]; then
-        redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD";
-      else
-        redis-server --appendonly yes;
-      fi
-      '
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
 
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
 
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          'if [ -n "$$REDIS_PASSWORD" ]; then redis-cli -a "$$REDIS_PASSWORD" ping | grep PONG; else redis-cli ping | grep PONG; fi'
-        ]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+    networks:
+      - backend-network
+
+  # Spring Boot
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gong-app
+    restart: unless-stopped
+
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      KAKAO_CLIENT_ID: ${KAKAO_CLIENT_ID}
+      KAKAO_CLIENT_SECRET: ${KAKAO_CLIENT_SECRET}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL}
+      ANTHROPIC_API_URL: ${ANTHROPIC_API_URL}
+      FRONTEND_URL: ${FRONTEND_URL}
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
 
 volumes:
   postgres_data:
