@@ -1,4 +1,7 @@
-FROM ubuntu:latest
-LABEL authors="yuri"
+FROM openjdk:17-jdk-slim
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+
+COPY build/libs/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
