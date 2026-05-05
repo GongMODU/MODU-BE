@@ -24,15 +24,17 @@ import java.util.Map;
 @Configuration
 public class RedisCacheConfig {
     @Bean
-    public CacheManager cacheManager(
-            RedisConnectionFactory redisConnectionFactory,
-            ObjectMapper objectMapper
-    ) {
+    public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
+        // 기본 캐시용 JSON 직렬화기
+        // youtubeLatestVideos, youtubeSummaries, youtubeUploadsPlaylists 등에 사용
         GenericJackson2JsonRedisSerializer jsonSerializer =
-                new GenericJackson2JsonRedisSerializer(objectMapper);
+                new GenericJackson2JsonRedisSerializer();
 
+        // 자막 캐시 전용 JDK 직렬화기
+        // TranscriptResult를 LinkedHashMap이 아니라 실제 객체 형태로 복원하기 위해 사용
         JdkSerializationRedisSerializer jdkSerializer = new JdkSerializationRedisSerializer();
 
+        // 대부분의 캐시에 적용할 기본 설정
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30))
                 .serializeKeysWith(
@@ -50,7 +52,6 @@ public class RedisCacheConfig {
                 .serializeKeysWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
                 )
-
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(jdkSerializer)
                 )
@@ -65,7 +66,7 @@ public class RedisCacheConfig {
 
         cacheConfigurations.put(
                 "youtubeTranscripts",
-                defaultConfig.entryTtl(Duration.ofDays(14))
+                transcriptCacheConfig.entryTtl(Duration.ofDays(14))
 
         );
 
