@@ -32,18 +32,18 @@ public enum ErrorCode {
     PERSONA_TYPE_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, "페르소나 유형 데이터를 찾을 수 없습니다."),
 
     // Claude API
-    CLAUDE_API_ERROR(HttpStatus.BAD_GATEWAY, "Claude API 호출에 실패했습니다."),
+    CLAUDE_API_ERROR(HttpStatus.BAD_GATEWAY, "Claude API 호출 중 오류가 발생했습니다."),
 
     // Common
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
 
     // YouTube
-    CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "채널을 찾을 수 없습니다."),
     PLAYLIST_NOT_FOUND(HttpStatus.NOT_FOUND, "재생목록을 찾을 수 없습니다."),
-    VIDEO_NOT_FOUND(HttpStatus.NOT_FOUND, "선택 가능한 YouTube 영상이 없습니다."),
-    VIDEO_POOL_EMPTY(HttpStatus.NOT_FOUND, "수집된 영상이 없습니다."),
-    TRANSCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "자막이 있는 영상을 찾지 못했습니다."),
-    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "요약 정보를 찾을 수 없습니다.");
+    VIDEO_NOT_FOUND(HttpStatus.NOT_FOUND, "YouTube 영상을 찾을 수 없습니다."),
+    VIDEO_POOL_EMPTY(HttpStatus.NOT_FOUND, "수집된 YouTube 영상 후보가 없습니다."),
+    TRANSCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "자막이 있는 YouTube 영상을 찾지 못했습니다."),
+    CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "YouTube 채널을 찾을 수 없습니다."),
+    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 유튜브 요약 정보를 찾을 수 없습니다.");
 
 
 

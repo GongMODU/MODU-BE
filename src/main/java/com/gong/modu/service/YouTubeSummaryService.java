@@ -12,58 +12,36 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
+// 사용자에게 YouTube 요약 콘텐츠를 제공하는 서비스 클래스
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class YouTubeSummaryService {
 
     private static final int SUMMARY_COUNT = 3;
-    private static final int MAX_ATTEMPTS = 9;
 
-    private final RandomTranscriptService randomTranscriptService;
-    private final VideoSummaryBuilderService videoSummaryBuilderService;
     private final YouTubeVideoSummaryRepository summaryRepository;
 
+    // 홈 화면용 3줄 요약 목록을 반환
+    // 기존: 랜덤 자막 추출, LLM 요약, 결과 반환
+    // 변경: DB에 저장된 요약 중 랜덤 3개 조회 & 결과 반환
+    @Transactional(readOnly = true)
     public List<VideoSummaryResponse> getSummaries() {
-        List<RandomTranscriptResponse> transcripts = collectTranscripts();
+        List<YouTubeVideoSummary> summaries = summaryRepository.findRandomSummaries(SUMMARY_COUNT);
 
-        // 영상 3개를 동시에 던짐
-        List<CompletableFuture<VideoSummaryResponse>> futures = transcripts.stream()
-                .map(videoSummaryBuilderService::buildAsync)
-                .toList();
-
-        return futures.stream()
-                .map(CompletableFuture::join) // 백그라운드 스레드에서 실행 -> 결과 안 기다리고 바로 다음으로 넘어감
-                .toList();
-    }
-
-    private List<RandomTranscriptResponse> collectTranscripts() {
-        List<RandomTranscriptResponse> transcripts = new ArrayList<>();
-        Set<String> seenVideoIds = new HashSet<>();
-
-        for (int i = 0; i < MAX_ATTEMPTS && transcripts.size() < SUMMARY_COUNT; i++) {
-            RandomTranscriptResponse transcript;
-            try {
-                transcript = randomTranscriptService.getRandomTranscript();
-            } catch (CustomException e) {
-                log.warn("자막 추출 실패로 수집 중단. 수집된 영상 수={}", transcripts.size());
-                break;
-            }
-
-            if (seenVideoIds.contains(transcript.videoId())) continue;
-            seenVideoIds.add(transcript.videoId());
-            transcripts.add(transcript);
+        if (summaries.isEmpty()) {
+            throw new CustomException(ErrorCode.SUMMARY_NOT_FOUND);
         }
 
-        return transcripts;
+        return summaries.stream()
+                .map(this::toSummaryResponse)
+                .toList();
     }
 
+    // 상세 모달용 긴 설명을 반환
     @Transactional(readOnly = true)
     public VideoDetailSummaryResponse getDetailSummary(String videoId) {
         YouTubeVideoSummary summary = summaryRepository.findByVideoId(videoId)
@@ -74,6 +52,23 @@ public class YouTubeSummaryService {
                 summary.getChannelName(),
                 summary.getVideoUrl(),
                 summary.getDetailSummaryText()
+        );
+    }
+
+    // 엔티티를 홈 화면용 응답 DTO로 변환하는 메서드
+    private VideoSummaryResponse toSummaryResponse(YouTubeVideoSummary entity) {
+        List<String> lines = Arrays.stream(entity.getSummaryText().split("\n"))
+                .map(String::strip)
+                .filter(line -> !line.isEmpty())
+                .limit(3)
+                .toList();
+
+        return new VideoSummaryResponse(
+                entity.getVideoId(),
+                entity.getVideoTitle(),
+                entity.getChannelName(),
+                entity.getVideoUrl(),
+                lines
         );
     }
 

@@ -1,5 +1,6 @@
 package com.gong.modu.domain.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 public record TranscriptResult(
@@ -11,7 +12,7 @@ public record TranscriptResult(
         List<TranscriptSegment> segments,
         String errorType,
         String message
-) {
+) implements Serializable {
     public record TranscriptSegment(
             String text,
             Double start,
