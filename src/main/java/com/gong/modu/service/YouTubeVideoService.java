@@ -5,6 +5,7 @@ import com.gong.modu.config.YouTubeProperties;
 import com.gong.modu.domain.dto.YouTubeVideoSummary;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 // 여러 YouTube 채널에서 최신 영상 목록을 수집하고, 그 중 랜덤 영상을 선택하는 서비스 클래스
+@Slf4j
 @Service
 public class YouTubeVideoService {
 
@@ -35,12 +37,27 @@ public class YouTubeVideoService {
     public List<YouTubeVideoSummary> collectLatestVideoPool() {
         List<YouTubeVideoSummary> pool = new ArrayList<>();
 
+        long minDurationSeconds = Math.max(properties.getMinVideoDurationSeconds(), 0);
+
         for (String channelId : properties.getChannelIds()) {
             List<YouTubeVideoSummary> videos = youTubeClient.getLatestVideos(
                     channelId,
                     properties.getLatestVideoCountPerChannel()
             );
-            pool.addAll(videos);
+            List<YouTubeVideoSummary> filteredVideos = videos.stream()
+                    // durationSeconds가 설정값보다 짧으면 숏폼 영상으로 판단하고 제외함
+                    .filter(video -> video.durationSeconds() >= minDurationSeconds)
+                    .toList();
+
+            log.info(
+                    "YouTube 최신 영상 필터링 완료. channelId={}, originalCount={}, filteredCount={}, minDurationSeconds={}",
+                    channelId,
+                    videos.size(),
+                    filteredVideos.size(),
+                    minDurationSeconds
+            );
+
+            pool.addAll(filteredVideos); // 롱폼으로 필터링 된 영상들만 pool에 추가
         }
 
         return pool;

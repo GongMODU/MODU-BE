@@ -17,6 +17,6 @@ public record TranscriptResult(
             String text,
             Double start,
             Double duration
-    ) {
+    ) implements Serializable {
     }
 }

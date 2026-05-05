@@ -22,7 +22,7 @@ public class YouTubeProperties {
 
     // 자막 추출에 실패했을 때, 다른 영상으로 최대 몇 번 재시도할지
     // properties의 youtube.transcript-retry-count 값이 들어옴
-    private int transcriptRetryCount = 3;
+    private int transcriptRetryCount = 10;
 
     // youtube_transcript_api에서 사용할 쿠키 파일 경로
     // properties의 youtube.cookies-path 값이 들어옴
@@ -31,12 +31,23 @@ public class YouTubeProperties {
     // 한 번 수동 수집 API를 호출했을 때 목표로 하는 요약 개수
     // 예: 1이면 성공한 요약 1개만 만들고 종료
     // properties의 youtube.summary-target-count 값이 들어옴
-    private int summaryTargetCount = 1;
+    private int summaryTargetCount = 3;
 
     // 목표 요약 개수를 채우기 위해 전체적으로 몇 번까지 시도할지
     // 예: 3이면 전체 수집 루프를 최대 3번까지만 반복
     // properties의 youtube.summary-max-attempts 값이 들어옴
-    private int summaryMaxAttempts = 3;
+    private int summaryMaxAttempts = 10;
+
+    // 수집할 영상의 최소 길이(초)
+    private int minVideoDurationSeconds = 180;
+
+    public int getMinVideoDurationSeconds() {
+        return minVideoDurationSeconds;
+    }
+
+    public void setMinVideoDurationSeconds(int minVideoDurationSeconds) {
+        this.minVideoDurationSeconds = minVideoDurationSeconds;
+    }
 
     public String getApiKey() {
         return apiKey;
