@@ -11,6 +11,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
@@ -30,6 +31,8 @@ public class RedisCacheConfig {
         GenericJackson2JsonRedisSerializer jsonSerializer =
                 new GenericJackson2JsonRedisSerializer(objectMapper);
 
+        JdkSerializationRedisSerializer jdkSerializer = new JdkSerializationRedisSerializer();
+
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30))
                 .serializeKeysWith(
@@ -37,6 +40,19 @@ public class RedisCacheConfig {
                 )
                 .serializeValuesWith(
                         RedisSerializationContext.SerializationPair.fromSerializer(jsonSerializer)
+                )
+                .disableCachingNullValues();
+
+        // youtubeTranscripts 캐시에만 적용할 설정
+        // 자막 캐시: JDK 직렬화
+        RedisCacheConfiguration transcriptCacheConfig = RedisCacheConfiguration.defaultCacheConfig()
+                .entryTtl(Duration.ofDays(14))
+                .serializeKeysWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())
+                )
+
+                .serializeValuesWith(
+                        RedisSerializationContext.SerializationPair.fromSerializer(jdkSerializer)
                 )
                 .disableCachingNullValues();
 

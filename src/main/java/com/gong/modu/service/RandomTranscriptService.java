@@ -77,6 +77,7 @@ public class RandomTranscriptService {
                         video.title(),
                         video.channelId(),
                         video.channelTitle(),
+                        video.publishedAt(),
                         transcript.language(),
                         transcript.transcriptType(),
                         transcript.text()

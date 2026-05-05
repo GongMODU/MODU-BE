@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class TranscriptExtractor {
 
-    private static final Duration TIMEOUT = Duration.ofSeconds(15);
+    private static final Duration TIMEOUT = Duration.ofMinutes(5);
 
     private final ObjectMapper objectMapper;
     private final YouTubeProperties properties;
