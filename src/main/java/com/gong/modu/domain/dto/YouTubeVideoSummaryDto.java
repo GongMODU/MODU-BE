@@ -2,7 +2,7 @@ package com.gong.modu.domain.dto;
 
 import java.time.OffsetDateTime;
 
-public record YouTubeVideoSummary(
+public record YouTubeVideoSummaryDto(
         String channelId,
         String channelTitle,
         String videoId,

@@ -3,7 +3,7 @@ package com.gong.modu.client;
 import com.gong.modu.config.YouTubeProperties;
 import com.gong.modu.domain.dto.YouTubeChannelResponse;
 import com.gong.modu.domain.dto.YouTubePlaylistItemsResponse;
-import com.gong.modu.domain.dto.YouTubeVideoSummary;
+import com.gong.modu.domain.dto.YouTubeVideoSummaryDto;
 import com.gong.modu.domain.dto.YouTubeVideosResponse;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
@@ -69,7 +69,7 @@ public class YouTubeClient {
 
     // uploads playlist ID로 최신 영상을 가져옴
     // playListItems API에서는 영상 길이(duration)를 바로 받을 수 없으므로 videoId 목록만 가져온 뒤, videos API를 한 번 더 호출해야 함
-    public List<YouTubeVideoSummary> getLatestVideos(String channelId, int maxResults) {
+    public List<YouTubeVideoSummaryDto> getLatestVideos(String channelId, int maxResults) {
         String uploadsPlaylistId = getUploadsPlaylistId(channelId);
 
         YouTubePlaylistItemsResponse response = youtubeWebClient.get()
@@ -113,7 +113,7 @@ public class YouTubeClient {
 
                     long durationSeconds = durationSecondsByVideoId.getOrDefault(videoId, 0L);
 
-                    return new YouTubeVideoSummary(
+                    return new YouTubeVideoSummaryDto(
                             channelId,
                             item.snippet().channelTitle(),
                             videoId,

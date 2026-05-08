@@ -1,9 +1,6 @@
 package com.gong.modu.config;
 
-import com.gong.modu.security.CustomOAuth2UserService;
-import com.gong.modu.security.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.gong.modu.security.JwtAuthenticationFilter;
-import com.gong.modu.security.OAuth2SuccessHandler;
+import com.gong.modu.security.*;
 import com.gong.modu.util.JwtUtil;
 import com.gong.modu.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,11 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository;
 
     @Bean
+    public AdminApiKeyFilter adminApiKeyFilter() {
+        return new AdminApiKeyFilter();
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -51,8 +53,8 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 // YouTube 자막 추출 검증용 API
                                 "/api/youtube/random-transcript",
-                                // 하루 1회 수동 수집용 API
-                                "/api/youtube/admin/summaries/collect"
+                                // 유튜브 자막 추출 & 요약용 관리자 API
+                                "/api/youtube/admin/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -74,6 +76,10 @@ public class SecurityConfig {
                         .redirectionEndpoint(redirect -> redirect
                                 .baseUri("/api/v1/auth/oauth2/callback/*")
                         )
+                )
+                .addFilterBefore(
+                        adminApiKeyFilter(),
+                        UsernamePasswordAuthenticationFilter.class
                 )
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtUtil, redisUtil),

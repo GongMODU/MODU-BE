@@ -2,7 +2,7 @@ package com.gong.modu.service;
 
 import com.gong.modu.client.YouTubeClient;
 import com.gong.modu.config.YouTubeProperties;
-import com.gong.modu.domain.dto.YouTubeVideoSummary;
+import com.gong.modu.domain.dto.YouTubeVideoSummaryDto;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -34,17 +34,17 @@ public class YouTubeVideoService {
             cacheNames = "youtubeLatestVideos",
             key = "'pool'"
     )
-    public List<YouTubeVideoSummary> collectLatestVideoPool() {
-        List<YouTubeVideoSummary> pool = new ArrayList<>();
+    public List<YouTubeVideoSummaryDto> collectLatestVideoPool() {
+        List<YouTubeVideoSummaryDto> pool = new ArrayList<>();
 
         long minDurationSeconds = Math.max(properties.getMinVideoDurationSeconds(), 0);
 
         for (String channelId : properties.getChannelIds()) {
-            List<YouTubeVideoSummary> videos = youTubeClient.getLatestVideos(
+            List<YouTubeVideoSummaryDto> videos = youTubeClient.getLatestVideos(
                     channelId,
                     properties.getLatestVideoCountPerChannel()
             );
-            List<YouTubeVideoSummary> filteredVideos = videos.stream()
+            List<YouTubeVideoSummaryDto> filteredVideos = videos.stream()
                     // durationSeconds가 설정값보다 짧으면 숏폼 영상으로 판단하고 제외함
                     .filter(video -> video.durationSeconds() >= minDurationSeconds)
                     .toList();
@@ -64,7 +64,7 @@ public class YouTubeVideoService {
     }
 
     // 영상 pool에서 랜덤으로 하나를 선택
-    public YouTubeVideoSummary pickRandomVideo(List<YouTubeVideoSummary> pool) {
+    public YouTubeVideoSummaryDto pickRandomVideo(List<YouTubeVideoSummaryDto> pool) {
         if (pool == null || pool.isEmpty()) {
             throw new CustomException(ErrorCode.VIDEO_NOT_FOUND);
         }
@@ -74,8 +74,8 @@ public class YouTubeVideoService {
     }
 
     // 자막 없는 영상이 있을 수 있으므로 최신 영상 pool을 가져온 뒤 랜덤 순서로 섞어서 반환
-    public List<YouTubeVideoSummary> collectShuffledLatestVideoPool() {
-        List<YouTubeVideoSummary> pool = new ArrayList<>(collectLatestVideoPool());
+    public List<YouTubeVideoSummaryDto> collectShuffledLatestVideoPool() {
+        List<YouTubeVideoSummaryDto> pool = new ArrayList<>(collectLatestVideoPool());
         Collections.shuffle(pool, random);
         return pool;
     }
