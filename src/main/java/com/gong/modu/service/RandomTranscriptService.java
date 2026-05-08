@@ -3,7 +3,7 @@ package com.gong.modu.service;
 import com.gong.modu.config.YouTubeProperties;
 import com.gong.modu.domain.dto.RandomTranscriptResponse;
 import com.gong.modu.domain.dto.TranscriptResult;
-import com.gong.modu.domain.dto.YouTubeVideoSummary;
+import com.gong.modu.domain.dto.YouTubeVideoSummaryDto;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class RandomTranscriptService {
     // 여러 채널의 최신 영상 중 자막이 존재하는 랜덤 영상을 하나 반환
     // LLM 요약 서비스에서 이 메서드를 호출한 뒤 반환된 RandomTranscriptResponse의 transcriptText()를 LLM에 넘기면 됨
     public RandomTranscriptResponse getRandomTranscript() {
-        List<YouTubeVideoSummary> shuffledPool = youTubeVideoService.collectShuffledLatestVideoPool();
+        List<YouTubeVideoSummaryDto> shuffledPool = youTubeVideoService.collectShuffledLatestVideoPool();
 
         if (shuffledPool.isEmpty()) {
             log.warn("YouTube 영상 pool이 비어 있습니다.");
@@ -48,7 +48,7 @@ public class RandomTranscriptService {
         );
 
         for (int i = 0; i < retryLimit; i++) {
-            YouTubeVideoSummary video = shuffledPool.get(i);
+            YouTubeVideoSummaryDto video = shuffledPool.get(i);
 
             log.info("자막 추출 시도. attempt={}/{},channelTitle={}, videoId={}, title={}",
                     i + 1,
