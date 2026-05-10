@@ -1,9 +1,9 @@
 package com.gong.modu.controller;
 
-import com.gong.modu.domain.dto.InvestmentAnalysisResponse;
-import com.gong.modu.domain.dto.InvestmentAnswerRequest;
-import com.gong.modu.domain.dto.InvestmentQuestionResponse;
-import com.gong.modu.service.InvestmentProfileService;
+import com.gong.modu.domain.dto.user.InvestmentAnalysisResponse;
+import com.gong.modu.domain.dto.user.InvestmentAnswerRequest;
+import com.gong.modu.domain.dto.user.InvestmentQuestionResponse;
+import com.gong.modu.service.user.InvestmentProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

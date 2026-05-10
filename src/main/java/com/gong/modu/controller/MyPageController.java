@@ -1,9 +1,9 @@
 package com.gong.modu.controller;
 
-import com.gong.modu.domain.dto.*;
-import com.gong.modu.service.AuthService;
-import com.gong.modu.service.InvestmentProfileService;
-import com.gong.modu.service.MyPageService;
+import com.gong.modu.domain.dto.user.*;
+import com.gong.modu.service.user.AuthService;
+import com.gong.modu.service.user.InvestmentProfileService;
+import com.gong.modu.service.user.MyPageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

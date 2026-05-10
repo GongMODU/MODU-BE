@@ -1,6 +1,6 @@
 package com.gong.modu.security;
 
-import com.gong.modu.domain.entity.User;
+import com.gong.modu.domain.entity.user.User;
 import com.gong.modu.util.JwtUtil;
 import com.gong.modu.util.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package com.gong.modu.security;
 
-import com.gong.modu.domain.entity.User;
+import com.gong.modu.domain.entity.user.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
