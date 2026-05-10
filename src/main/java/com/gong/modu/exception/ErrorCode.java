@@ -43,8 +43,13 @@ public enum ErrorCode {
     VIDEO_POOL_EMPTY(HttpStatus.NOT_FOUND, "수집된 YouTube 영상 후보가 없습니다."),
     TRANSCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "자막이 있는 YouTube 영상을 찾지 못했습니다."),
     CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "YouTube 채널을 찾을 수 없습니다."),
-    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 유튜브 요약 정보를 찾을 수 없습니다.");
+    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 유튜브 요약 정보를 찾을 수 없습니다."),
 
+    // 외부 공모주 API
+    DART_API_ERROR(HttpStatus.BAD_GATEWAY, "DART API 호출 중 오류가 발생했습니다."),
+    KIS_API_ERROR(HttpStatus.BAD_GATEWAY, "KIS API 호출 중 오류가 발생했습니다."),
+    KIS_TOKEN_ERROR(HttpStatus.BAD_GATEWAY, "KIS 접근 토큰 발급 중 오류가 발생했습니다."),
+    EXTERNAL_API_EMPTY_RESPONSE(HttpStatus.BAD_GATEWAY, "외부 API 응답이 비어 있습니다.");
 
 
     private final HttpStatus httpStatus;
