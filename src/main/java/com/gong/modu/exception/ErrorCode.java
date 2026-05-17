@@ -53,8 +53,11 @@ public enum ErrorCode {
     // KIS 접근 토큰 발급 실패 시 사용하는 에러 (KIS는 주가 API 호출 전에 access token을 발급받아야 하므로 토큰 발급 실패는 일반 KIS API 조회 실패와 분리함)
     KIS_TOKEN_ERROR(HttpStatus.BAD_GATEWAY, "KIS 접근 토큰 발급 중 오류가 발생했습니다."),
     // 외부 API 호출은 성공했지만 response body가 null인 경우 사용 (HTTP 상태는 정상이어도 실제 응답 객체가 비어 있으면 이후 DTO 접근에서 NullPointerException 발생할 수 있음)
-    EXTERNAL_API_EMPTY_RESPONSE(HttpStatus.BAD_GATEWAY, "외부 API 응답이 비어 있습니다.");
-
+    EXTERNAL_API_EMPTY_RESPONSE(HttpStatus.BAD_GATEWAY, "외부 API 응답이 비어 있습니다."),
+    COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "기업 정보를 찾을 수 없습니다."),
+    IPO_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "공모주 정보를 찾을 수 없습니다."),
+    FINANCIAL_DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "기업 재무 정보를 찾을 수 없습니다."),
+    STOCK_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "종목코드가 없어 주가를 조회할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

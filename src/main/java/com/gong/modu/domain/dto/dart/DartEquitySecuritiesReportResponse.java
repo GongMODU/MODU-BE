@@ -1,5 +1,6 @@
 package com.gong.modu.domain.dto.dart;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,10 +21,18 @@ public class DartEquitySecuritiesReportResponse {
     @NoArgsConstructor
     public static class Item {
 
+        @JsonProperty("rcept_no")
         private String rceptNo; // 공시 접수번호
+
+        @JsonProperty("corp_cls")
         private String corpCls; // 법인 구분 (Y/K/N/E)
+
+        @JsonProperty("corp_code")
         private String corpCode; // DART 기업 고유번호
+
+        @JsonProperty("corp_name")
         private String corpName; // 기업명
+
         private String sbd; // 청약기일
         private String pymd; // 납입기일
         private String sband; // 청약공고일

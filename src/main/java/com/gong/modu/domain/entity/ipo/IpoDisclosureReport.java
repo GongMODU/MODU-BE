@@ -101,4 +101,9 @@ public class IpoDisclosureReport extends BaseTimeEntity {
         this.riskSummary = riskSummary;
         this.summaryVersion = summaryVersion;
     }
+
+    // 공시명 갱신 메서드
+    public void updateReportInfo(String reportName) {
+        this.reportName = reportName;
+    }
 }

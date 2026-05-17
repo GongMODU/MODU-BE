@@ -121,7 +121,35 @@ public class IpoEvent extends BaseTimeEntity {
         this.lockupExpiryDate = lockupExpiryDate;
     }
 
+    // DART 주요정보 API에서 확실하게 제공되는 일정만 갱신하는 메서드
+    public void updateDartSchedule(
+            LocalDate subscriptionStartDate,
+            LocalDate subscriptionEndDate,
+            LocalDate paymentDate,
+            LocalDate allocationDate
+    ) {
+        this.subscriptionStartDate = subscriptionStartDate;
+        this.subscriptionEndDate = subscriptionEndDate;
+        this.paymentDate = paymentDate;
+        this.allocationDate = allocationDate;
+    }
+
     public void updateStatus(IpoEventStatus status) { // 공모이벤트 진행 상태 변경 메서드
         this.status = status; // UPCOMING, ONGOING, CLOSED, LISTED 중 하나로 갱신
+    }
+
+    // 공모 이벤트 기본 정보 갱신 메서드
+    public void updateBasicInfo(
+            String rceptNo,
+            String eventName,
+            IpoEventType eventType,
+            MarketType marketType,
+            String mainReportRceptNo
+    ) {
+        this.rceptNo = rceptNo;
+        this.eventName = eventName;
+        this.eventType = eventType;
+        this.marketType = marketType;
+        this.mainReportRceptNo = mainReportRceptNo;
     }
 }

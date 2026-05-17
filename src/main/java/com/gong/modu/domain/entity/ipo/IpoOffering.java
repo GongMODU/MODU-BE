@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.cglib.core.Local;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -106,5 +107,14 @@ public class IpoOffering extends BaseTimeEntity {
         this.offerMethod = offerMethod;
         this.equalAllocationShares = equalAllocationShares;
         this.generalAllocationShares = generalAllocationShares;
+    }
+
+    // 청약 공고일, 배정 기준일 갱신 메서드
+    public void updateOfferingDates(
+            LocalDate subscriptionNoticeDate,
+            LocalDate allocationBaseDate
+    ) {
+        this.subscriptionNoticeDate = subscriptionNoticeDate;
+        this.allocationBaseDate = allocationBaseDate;
     }
 }
