@@ -1,8 +1,8 @@
 package com.gong.modu.security;
 
-import com.gong.modu.domain.entity.User;
-import com.gong.modu.domain.enums.Provider;
-import com.gong.modu.repository.UserRepository;
+import com.gong.modu.domain.entity.user.User;
+import com.gong.modu.domain.enums.user.Provider;
+import com.gong.modu.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

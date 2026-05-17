@@ -43,8 +43,17 @@ public enum ErrorCode {
     VIDEO_POOL_EMPTY(HttpStatus.NOT_FOUND, "수집된 YouTube 영상 후보가 없습니다."),
     TRANSCRIPT_NOT_FOUND(HttpStatus.NOT_FOUND, "자막이 있는 YouTube 영상을 찾지 못했습니다."),
     CHANNEL_NOT_FOUND(HttpStatus.NOT_FOUND, "YouTube 채널을 찾을 수 없습니다."),
-    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 유튜브 요약 정보를 찾을 수 없습니다.");
+    SUMMARY_NOT_FOUND(HttpStatus.NOT_FOUND, "저장된 유튜브 요약 정보를 찾을 수 없습니다."),
 
+    // 외부 공모주 API
+    // DART 호출 실패 시 사용하는 에러 (HTTP 오류, DART 내부 status 오류, 응답 구조 이상 등을 묶어 처리)
+    DART_API_ERROR(HttpStatus.BAD_GATEWAY, "DART API 호출 중 오류가 발생했습니다."),
+    // KIS 주식 시세 API 호출 실패 시 사용하는 에러 (현재가 조회, 기간별 시세 조회 등에서 KIS가 실패 응답을 주거나 호출 자체가 실패 시)
+    KIS_API_ERROR(HttpStatus.BAD_GATEWAY, "KIS API 호출 중 오류가 발생했습니다."),
+    // KIS 접근 토큰 발급 실패 시 사용하는 에러 (KIS는 주가 API 호출 전에 access token을 발급받아야 하므로 토큰 발급 실패는 일반 KIS API 조회 실패와 분리함)
+    KIS_TOKEN_ERROR(HttpStatus.BAD_GATEWAY, "KIS 접근 토큰 발급 중 오류가 발생했습니다."),
+    // 외부 API 호출은 성공했지만 response body가 null인 경우 사용 (HTTP 상태는 정상이어도 실제 응답 객체가 비어 있으면 이후 DTO 접근에서 NullPointerException 발생할 수 있음)
+    EXTERNAL_API_EMPTY_RESPONSE(HttpStatus.BAD_GATEWAY, "외부 API 응답이 비어 있습니다.");
 
 
     private final HttpStatus httpStatus;

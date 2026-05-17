@@ -1,7 +1,7 @@
 package com.gong.modu.controller;
 
-import com.gong.modu.domain.dto.*;
-import com.gong.modu.service.AuthService;
+import com.gong.modu.domain.dto.user.*;
+import com.gong.modu.service.user.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

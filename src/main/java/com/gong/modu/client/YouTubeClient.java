@@ -1,10 +1,10 @@
 package com.gong.modu.client;
 
 import com.gong.modu.config.YouTubeProperties;
-import com.gong.modu.domain.dto.YouTubeChannelResponse;
-import com.gong.modu.domain.dto.YouTubePlaylistItemsResponse;
-import com.gong.modu.domain.dto.YouTubeVideoSummaryDto;
-import com.gong.modu.domain.dto.YouTubeVideosResponse;
+import com.gong.modu.domain.dto.youtube.YouTubeChannelResponse;
+import com.gong.modu.domain.dto.youtube.YouTubePlaylistItemsResponse;
+import com.gong.modu.domain.dto.youtube.YouTubeVideoSummaryDto;
+import com.gong.modu.domain.dto.youtube.YouTubeVideosResponse;
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
 import org.springframework.stereotype.Component;

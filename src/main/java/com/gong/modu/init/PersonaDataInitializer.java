@@ -1,7 +1,7 @@
 package com.gong.modu.init;
 
-import com.gong.modu.domain.entity.InvestmentPersonaType;
-import com.gong.modu.repository.InvestmentPersonaTypeRepository;
+import com.gong.modu.domain.entity.user.InvestmentPersonaType;
+import com.gong.modu.repository.user.InvestmentPersonaTypeRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;

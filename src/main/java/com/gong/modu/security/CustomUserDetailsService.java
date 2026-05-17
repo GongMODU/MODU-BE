@@ -2,7 +2,7 @@ package com.gong.modu.security;
 
 import com.gong.modu.exception.CustomException;
 import com.gong.modu.exception.ErrorCode;
-import com.gong.modu.repository.UserRepository;
+import com.gong.modu.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

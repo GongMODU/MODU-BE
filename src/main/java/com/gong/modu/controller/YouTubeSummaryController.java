@@ -1,10 +1,10 @@
 package com.gong.modu.controller;
 
-import com.gong.modu.domain.dto.*;
-import com.gong.modu.service.DailyYouTubeSummaryCollectService;
-import com.gong.modu.service.YouTubeSummaryAdminService;
-import com.gong.modu.service.YouTubeSummaryProdUploadService;
-import com.gong.modu.service.YouTubeSummaryService;
+import com.gong.modu.domain.dto.youtube.*;
+import com.gong.modu.service.youtube.DailyYouTubeSummaryCollectService;
+import com.gong.modu.service.youtube.YouTubeSummaryAdminService;
+import com.gong.modu.service.youtube.YouTubeSummaryProdUploadService;
+import com.gong.modu.service.youtube.YouTubeSummaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

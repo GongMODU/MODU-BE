@@ -1,7 +1,7 @@
 package com.gong.modu.controller;
 
-import com.gong.modu.domain.dto.RandomTranscriptResponse;
-import com.gong.modu.service.RandomTranscriptService;
+import com.gong.modu.domain.dto.youtube.RandomTranscriptResponse;
+import com.gong.modu.service.youtube.RandomTranscriptService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
