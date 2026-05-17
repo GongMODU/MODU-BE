@@ -16,6 +16,9 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     // 종목코드로 조회
     Optional<Company> findByStockCode(String stockCode);
 
+    // 종목코드가 존재하는 기업만 조회
+    List<Company> findByStockCodeIsNotNull();
+
     // 기업명 포함 검색
     List<Company> findByCorpNameContaining(String keyword);
 
