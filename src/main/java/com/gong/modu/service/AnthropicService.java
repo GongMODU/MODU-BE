@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -20,6 +21,7 @@ import java.util.List;
 public class AnthropicService {
 
     private final WebClient anthropicWebClient;
+    private final ClaudeUsageGuard usageGuard;
 
     @Value("${anthropic.model}")
     private String model;
@@ -34,6 +36,8 @@ public class AnthropicService {
     }
 
     public String call(List<AnthropicMessageDto> messages, int maxTokens) {
+        usageGuard.checkLimit();
+
         AnthropicRequestDto request = AnthropicRequestDto.builder()
                 .model(model)
                 .maxTokens(maxTokens)
@@ -51,6 +55,10 @@ public class AnthropicService {
             if (response == null) {
                 throw new CustomException(ErrorCode.CLAUDE_API_ERROR);
             }
+
+            Optional.ofNullable(response.getUsage()).ifPresent(usage ->
+                    usageGuard.recordUsage(usage.getInputTokens(), usage.getOutputTokens())
+            );
 
             return response.getFirstText();
 
