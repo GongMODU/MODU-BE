@@ -1,5 +1,6 @@
 package com.gong.modu.service.youtube;
 
+import com.gong.modu.domain.dto.youtube.DetailSummarySection;
 import com.gong.modu.domain.dto.youtube.VideoDetailSummaryResponse;
 import com.gong.modu.domain.dto.youtube.VideoSummaryResponse;
 import com.gong.modu.domain.entity.YouTubeVideoSummary;
@@ -49,8 +50,37 @@ public class YouTubeSummaryService {
                 summary.getVideoTitle(),
                 summary.getChannelName(),
                 summary.getVideoUrl(),
-                summary.getDetailSummaryText()
+                parseDetailSummary(summary.getDetailSummaryText())
         );
+    }
+
+    private List<DetailSummarySection> parseDetailSummary(String text) {
+        List<DetailSummarySection> sections = new ArrayList<>();
+        if (text == null || text.isBlank()) return sections;
+
+        String currentTitle = null;
+        StringBuilder currentContent = new StringBuilder();
+
+        for (String line : text.split("\n")) {
+            if (line.startsWith("## ")) {
+                if (currentTitle != null) {
+                    sections.add(new DetailSummarySection(currentTitle, currentContent.toString().strip()));
+                }
+                currentTitle = line.substring(3).strip();
+                currentContent = new StringBuilder();
+            } else {
+                if (currentTitle != null) {
+                    if (currentContent.length() > 0) currentContent.append("\n");
+                    currentContent.append(line);
+                }
+            }
+        }
+
+        if (currentTitle != null) {
+            sections.add(new DetailSummarySection(currentTitle, currentContent.toString().strip()));
+        }
+
+        return sections;
     }
 
     // 엔티티를 홈 화면용 응답 DTO로 변환하는 메서드
