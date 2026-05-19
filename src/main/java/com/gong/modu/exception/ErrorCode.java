@@ -33,6 +33,7 @@ public enum ErrorCode {
 
     // Claude API
     CLAUDE_API_ERROR(HttpStatus.BAD_GATEWAY, "Claude API 호출 중 오류가 발생했습니다."),
+    CLAUDE_CREDIT_LIMIT_EXCEEDED(HttpStatus.TOO_MANY_REQUESTS, "Claude API 크레딧 한도($25)에 도달했습니다. 관리자에게 문의하세요."),
 
     // Common
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류가 발생했습니다."),
@@ -56,6 +57,7 @@ public enum ErrorCode {
     EXTERNAL_API_EMPTY_RESPONSE(HttpStatus.BAD_GATEWAY, "외부 API 응답이 비어 있습니다."),
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, "기업 정보를 찾을 수 없습니다."),
     IPO_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "공모주 정보를 찾을 수 없습니다."),
+    DISCLOSURE_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공모주의 공시 리포트를 찾을 수 없습니다."),
     FINANCIAL_DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "기업 재무 정보를 찾을 수 없습니다."),
     STOCK_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "종목코드가 없어 주가를 조회할 수 없습니다.");
 

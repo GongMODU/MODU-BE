@@ -30,6 +30,78 @@ public final class SummaryPrompts {
             "- 어려운 전문 용어는 괄호 안에 쉬운 설명을 덧붙일 것\n\n" +
             "상세 설명만 출력하고 다른 말은 쓰지 마세요.";
 
+    public static final String IPO_SUMMARY_VERSION = "1.0";
+
+    public static final String IPO_SYSTEM_PROMPT =
+            "당신은 공모주 투자 정보를 일반 투자자에게 쉽게 설명하는 전문가입니다.\n" +
+            "아래 공모주 데이터를 바탕으로 투자자가 이해하기 쉬운 요약을 생성해주세요.";
+
+    public static final String IPO_USER_PROMPT_TEMPLATE =
+            "## 입력 데이터\n" +
+            "{inputData}\n\n" +
+            "## 공통 규칙\n" +
+            "- 독자는 투자 초보자입니다. 전문 용어 사용 시 반드시 괄호 안에 쉬운 설명을 추가하세요.\n" +
+            "- 모든 문장은 경어체(~요, ~습니다)로 작성하세요.\n" +
+            "- 확인되지 않은 정보는 절대 추측하거나 창작하지 마세요.\n" +
+            "- 입력 데이터에 없는 값은 해당 항목을 생략하세요. null이나 \"알 수 없음\"으로 채우지 마세요.\n" +
+            "- 숫자 수치는 직접 나열하지 마세요. 수치는 프론트에서 별도 표시합니다.\n\n" +
+            "## 필드별 규칙\n\n" +
+            "### 1. companySummary\n" +
+            "- 형식: 2~3문장, 100자 이내\n" +
+            "- 내용: 기업 유형(SPAC 여부), 주요 사업 또는 목적, 설립일과 상장일\n" +
+            "- 톤: 중립적, 사실 전달\n\n" +
+            "### 2. financialSummary\n" +
+            "- 형식: 서술형 텍스트, 150자 이내\n" +
+            "- 내용: 재무 상태 전반을 관통하는 맥락 위주 설명. 수치 자체는 나열하지 말 것\n" +
+            "- 톤: \"왜 이런 수치인지\" 맥락 중심\n\n" +
+            "### 3. investorProtectionSummary\n" +
+            "- 형식: JSON 객체\n" +
+            "  {\n" +
+            "    \"highlight\": \"50자 이내 핵심 1문장\",\n" +
+            "    \"items\": {\n" +
+            "      \"항목명\": \"2~3문장, 80자 이내\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "- SPAC인 경우 항목: 공모 예치금 / 예치 목적 / 운용 자금\n" +
+            "- 일반 공모주인 경우 항목: 보호예수 / 환매청구권 / 의무보유확약 / 청약증거금 환불\n" +
+            "- 입력 데이터에 존재하는 항목만 포함할 것\n" +
+            "- 톤: 안심시키는 톤\n\n" +
+            "### 4. investmentPointSummary\n" +
+            "- SPAC이 아닌 경우 반드시 null 반환\n" +
+            "- SPAC인 경우:\n" +
+            "  {\n" +
+            "    \"highlight\": \"50자 이내 핵심 1문장\",\n" +
+            "    \"items\": {\n" +
+            "      \"합병 대상 산업\": \"string\",\n" +
+            "      \"합병 기한\": \"string\",\n" +
+            "      \"기한 초과 시\": \"string\"\n" +
+            "    }\n" +
+            "  }\n" +
+            "- 입력 데이터에 존재하는 항목만 포함할 것\n" +
+            "- 톤: 중립적\n\n" +
+            "### 5. riskSummary\n" +
+            "- 형식: JSON 배열, 2~4개 항목\n" +
+            "  [{ \"title\": \"소제목\", \"content\": \"2~3문장, 100자 이내\" }]\n" +
+            "- 입력 데이터 기반 실제 리스크만 작성\n" +
+            "- 톤: 과장하지 않되 솔직하게. 공포 조장 및 투자 유도 표현 금지\n\n" +
+            "## 출력 형식\n" +
+            "아래 JSON만 반환. 다른 텍스트, 설명, 마크다운 코드블록(```) 없이 순수 JSON만 반환.\n\n" +
+            "{\n" +
+            "  \"companySummary\": \"string\",\n" +
+            "  \"financialSummary\": \"string\",\n" +
+            "  \"investorProtectionSummary\": {\n" +
+            "    \"highlight\": \"string\",\n" +
+            "    \"items\": { \"항목명\": \"string\" }\n" +
+            "  },\n" +
+            "  \"investmentPointSummary\": {\n" +
+            "    \"highlight\": \"string\",\n" +
+            "    \"items\": { \"항목명\": \"string\" }\n" +
+            "  } | null,\n" +
+            "  \"riskSummary\": [\n" +
+            "    { \"title\": \"string\", \"content\": \"string\" }\n" +
+            "  ]\n" +
+            "}";
+
     public static final String YOUTUBE_SUMMARY_JSON_TEMPLATE =
             "아래는 유튜브 영상의 자막 전문입니다.\n\n" +
                     "---\n%s\n---\n\n" +

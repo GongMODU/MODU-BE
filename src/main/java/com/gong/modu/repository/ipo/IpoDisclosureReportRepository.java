@@ -20,4 +20,7 @@ public interface IpoDisclosureReportRepository extends JpaRepository<IpoDisclosu
 
     // 공시명에 특정 키워드가 포함된 공시 목록 조회
     List<IpoDisclosureReport> findByReportNameContaining(String keyword);
+
+    // AI 요약이 아직 생성되지 않은 공시 목록 조회 (배치 대상)
+    List<IpoDisclosureReport> findByCompanySummaryIsNull();
 }

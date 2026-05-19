@@ -27,4 +27,9 @@ public interface CompanyFinancialHighlightRepository extends JpaRepository<Compa
 
     // 특정 기업의 최신 사업연도 순 재무정보 조회
     List<CompanyFinancialHighlight> findByCompanyIdOrderByBsnsYearDesc(Long companyId);
+
+    // 특정 기업의 특정 보고서 유형만 최신 사업연도 순으로 조회
+    // ANNUAL만 지정 시 분기 데이터 혼입 방지 / 재무 차트 조회에서 사용
+    List<CompanyFinancialHighlight> findByCompanyIdAndReportCodeOrderByBsnsYearDesc(
+            Long companyId, ReportCode reportCode);
 }
