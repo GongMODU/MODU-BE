@@ -54,6 +54,9 @@ services:
     container_name: gong-app
     restart: unless-stopped
 
+    env_file:
+      - .env
+
     environment:
       SPRING_PROFILES_ACTIVE: prod
       DB_HOST: postgres
