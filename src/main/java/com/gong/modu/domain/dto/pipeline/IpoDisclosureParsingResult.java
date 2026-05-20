@@ -1,4 +1,4 @@
-package com.gong.modu.domain.dto;
+package com.gong.modu.domain.dto.pipeline;
 
 import lombok.Builder;
 import lombok.Getter;

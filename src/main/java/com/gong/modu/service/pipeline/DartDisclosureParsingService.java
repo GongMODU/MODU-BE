@@ -1,7 +1,7 @@
 package com.gong.modu.service.pipeline;
 
 import com.gong.modu.client.DartApiClient;
-import com.gong.modu.domain.dto.IpoDisclosureParsingResult;
+import com.gong.modu.domain.dto.pipeline.IpoDisclosureParsingResult;
 import com.gong.modu.domain.entity.ipo.IpoDisclosureReport;
 import com.gong.modu.domain.entity.ipo.IpoEvent;
 import com.gong.modu.domain.entity.ipo.IpoMetric;
@@ -35,6 +35,7 @@ public class DartDisclosureParsingService {
     private final IpoMetricRepository ipoMetricRepository;
     private final IpoDisclosureReportRepository disclosureReportRepository;
     private final RedisUtil redisUtil;
+    private final IpoDisclosureDocumentClassifier ipoDisclosureDocumentClassifier;
 
     // 아직 original_text가 없는 공시들을 일정 개수만큼 찾아 원문 ZIP 다운로드/파싱을 수행하는 메서드
     public void parseUnparsedDisclosureReports(int limit) {
@@ -84,7 +85,6 @@ public class DartDisclosureParsingService {
         IpoEvent ipoEvent = ipoEventRepository.findById(ipoEventId)
                 .orElseThrow(() -> new CustomException(ErrorCode.IPO_EVENT_NOT_FOUND));
 
-
         // DART 공시 원문 다운로드
         byte[] zipBytes = dartApiClient.downloadDisclosureDocumentZip(rceptNo);
 
@@ -93,6 +93,20 @@ public class DartDisclosureParsingService {
 
         if (originalText == null || originalText.isBlank()) {
             throw new CustomException(ErrorCode.DISCLOSURE_PARSING_FAILED);
+        }
+
+        // 원문 텍스트 기준으로 IPO/공모주 관련 문서인지 한 번 더 판단
+        if (!ipoDisclosureDocumentClassifier.isIpoCandidate(originalText)) {
+            log.info(
+                    "[DART Disclosure Parsing] IPO 관련 공시가 아니므로 파싱 건너뜀: rceptNo={}, documentType={}",
+                    rceptNo,
+                    ipoDisclosureDocumentClassifier.detectDocumentType(originalText)
+            );
+
+            // 비 IPO 공시라도 원문 확인 이력은 남길 수 있으므로 original_text만 저장
+            upsertDisclosureOriginalText(ipoEvent, rceptNo, originalText);
+
+            return;
         }
 
         // ipo_disclosure_reports에 원문 텍스트를 저장하거나 갱신

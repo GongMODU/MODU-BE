@@ -238,4 +238,47 @@ public class DartIpoSyncService {
 
         return IpoEventStatus.UPCOMING; // 위 조건에 모두 해당하지 않으면 예정 상태
     }
+
+    // DART 공시검색 결과의 reportNm을 기준으로 공모주 관련 공시 후보인지 판단하는 메서드
+    private boolean isIpoDisclosureCandidate(String reportName) {
+        if (reportName == null || reportName.isBlank())
+            return false;
+
+        String name = reportName.trim();
+
+        // 공모주와 직접 관련될 가능성이 높은 보고서명
+        boolean hasIpoReportType =
+                name.contains("증권신고서")
+                    || name.contains("투자설명서")
+                    || name.contains("발행조건확정");
+
+        // 공모주와 관련된 키워드
+        // 보고서명이 길거나 정정 공시 형태일 때 보조 판단 기준으로 사용합
+        boolean hasIpoKeyword =
+                name.contains("지분증권")
+                        || name.contains("공모")
+                        || name.contains("모집")
+                        || name.contains("매출");
+
+        // 명백히 IPO 공시가 아닌 주요사항보고서 계열은 제외
+        boolean hasNonIpoKeyword =
+                name.contains("타법인 주식")
+                        || name.contains("출자증권")
+                        || name.contains("양도결정")
+                        || name.contains("취득결정")
+                        || name.contains("주요사항보고서")
+                        || name.contains("단일판매")
+                        || name.contains("공급계약")
+                        || name.contains("최대주주")
+                        || name.contains("사업보고서")
+                        || name.contains("반기보고서")
+                        || name.contains("분기보고서");
+
+        // 명백한 비 IPO 키워드가 있으면 제외
+        if (hasNonIpoKeyword)
+            return false;
+
+        // IPO 성격의 보고서 유형이 있거나, 공모 관련 키워드가 있으면 후보로 봄
+        return hasIpoReportType || hasIpoKeyword;
+    }
 }
