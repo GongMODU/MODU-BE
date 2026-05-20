@@ -1,10 +1,8 @@
 package com.gong.modu.scheduler;
 
 import com.gong.modu.domain.entity.ipo.Company;
-import com.gong.modu.domain.entity.ipo.IpoDisclosureReport;
 import com.gong.modu.repository.ipo.CompanyRepository;
-import com.gong.modu.repository.ipo.IpoDisclosureReportRepository;
-import com.gong.modu.service.ipo.IpoDisclosureReportSummarizeService;
+import com.gong.modu.service.pipeline.DartDisclosureParsingService;
 import com.gong.modu.service.pipeline.KisStockPriceSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +21,21 @@ public class ExternalDataScheduler {
     private static final DateTimeFormatter BASIC_DATE = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     private final CompanyRepository companyRepository;
-    private final KisStockPriceSyncService kisStockPriceSyncService;
-    private final IpoDisclosureReportRepository disclosureReportRepository;
-    private final IpoDisclosureReportSummarizeService summarizeService;
+    private final KisStockPriceSyncService kisStockPriceSyncService; // 실제 KIS 주가 동기화 로직을 실행할 서비스
+
+    private final DartDisclosureParsingService dartDisclosureParsingService; // DART 공시 원문 다운/파싱 로직을 실행하는 서비스
+
+    @Scheduled(cron = "0 0 2 * * *")
+    public void parseUnparsedDartDisclosureDocuments() {
+        log.info("[Scheduler] DART 공시 원문 ZIP 파싱 시작");
+        try {
+            dartDisclosureParsingService.parseUnparsedDisclosureReports(20);
+        } catch (Exception e) {
+            log.error("[Scheduler] DART 공시 원문 ZIP 파싱 실패", e);
+        }
+
+        log.info("[Scheduler] DART 공시 원문 ZIP 파싱 종료");
+    }
 
 
     // 상장 기업들의 KIS 주가 뎅ㅣ터를 동기화하는 스케줄러 메서드
@@ -56,38 +66,5 @@ public class ExternalDataScheduler {
         }
 
         log.info("[Scheduler] KIS 상장 기업 주가 동기화 종료"); // 배치 종료 로그
-    }
-
-    // AI 요약이 생성되지 않은 공모주 공시 레코드를 대상으로 Claude API를 호출해 요약을 생성하는 스케줄러
-    // 매일 오전 7시 실행, 레코드 간 1초 간격으로 Claude API 과부하 방지
-    @Scheduled(cron = "0 0 7 * * *")
-    public void summarizeIpoDisclosureReports() {
-        log.info("[Scheduler] 공모주 AI 요약 배치 시작");
-
-        List<IpoDisclosureReport> pending = disclosureReportRepository.findByCompanySummaryIsNull();
-        log.info("[Scheduler] 요약 대상: {}건", pending.size());
-
-        int success = 0;
-        int fail = 0;
-
-        for (IpoDisclosureReport report : pending) {
-            try {
-                summarizeService.summarize(report.getId());
-                success++;
-            } catch (Exception e) {
-                log.warn("[Scheduler] 요약 실패 reportId={}: {}", report.getId(), e.getMessage());
-                fail++;
-            }
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                log.warn("[Scheduler] 공모주 AI 요약 배치 인터럽트 발생, 배치 중단");
-                break;
-            }
-        }
-
-        log.info("[Scheduler] 공모주 AI 요약 배치 종료 - 성공: {}건, 실패: {}건", success, fail);
     }
 }

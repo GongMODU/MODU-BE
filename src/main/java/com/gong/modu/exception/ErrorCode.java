@@ -59,7 +59,10 @@ public enum ErrorCode {
     IPO_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "공모주 정보를 찾을 수 없습니다."),
     DISCLOSURE_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 공모주의 공시 리포트를 찾을 수 없습니다."),
     FINANCIAL_DATA_NOT_FOUND(HttpStatus.NOT_FOUND, "기업 재무 정보를 찾을 수 없습니다."),
-    STOCK_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "종목코드가 없어 주가를 조회할 수 없습니다.");
+    STOCK_CODE_NOT_FOUND(HttpStatus.BAD_REQUEST, "종목코드가 없어 주가를 조회할 수 없습니다."),
+
+    // DART 원문 공시 ZIP을 받았지만 텍스트 추출 또는 파싱에 실패한 경우
+    DISCLOSURE_PARSING_FAILED(HttpStatus.BAD_GATEWAY, "공시 원문 파싱 중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
