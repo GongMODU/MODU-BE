@@ -164,4 +164,29 @@ public class DartApiClient {
             throw new CustomException(ErrorCode.DART_API_ERROR);
         }
     }
+
+    // DART 공시서류원본파일 API를 호출하여 공시 원문 ZIP 파일을 byte[]로 다운로드하는 메서드
+    public byte[] downloadDisclosureDocumentZip(String rceptNo) {
+        try {
+            byte[] response = dartWebClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/api/document.xml") // 공시서류원본파일 API 경로
+                            .queryParam("crtfc_key", apiKey) // DART 인증키
+                            .queryParam("rcept_no", rceptNo) // 다운로드할 공시의 접수번호
+                            .build())
+                    .retrieve()
+                    .bodyToMono(byte[].class) // HTTP 응답 body를 byte[]로 받음
+                    .block();
+
+            if (response == null || response.length == 0) {
+                throw new CustomException(ErrorCode.EXTERNAL_API_EMPTY_RESPONSE);
+            }
+
+            return response; // zip 바이너리 반환
+        } catch (WebClientResponseException e) {
+            throw new CustomException(ErrorCode.DART_API_ERROR);
+        } catch (WebClientRequestException e) {
+            throw new CustomException(ErrorCode.DART_API_ERROR);
+        }
+    }
 }
