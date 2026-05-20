@@ -19,7 +19,7 @@ import java.time.LocalDate;
 @Table(name = "ipo_offerings")
 public class IpoOffering extends BaseTimeEntity {
 
-    @Id // 기본키입니다.
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -109,12 +109,53 @@ public class IpoOffering extends BaseTimeEntity {
         this.generalAllocationShares = generalAllocationShares;
     }
 
+    // 공시 원문 파싱으로 얻은 공모 조건 값을 선택적으로 반영하는 메서드
+    public void updateParsedOfferingInfo(
+            Long shareCount,
+            Long totalListedShares,
+            BigDecimal offerPriceMin,
+            BigDecimal offerPriceMax,
+            BigDecimal offerPrice
+    ) {
+        // 공모주식수가 파싱된 경우에만 갱신
+        if (shareCount != null) {
+            this.shareCount = shareCount;
+        }
+
+        // 상장주식수가 파싱된 경우에만 갱신
+        if (totalListedShares != null) {
+            this.totalListedShares = totalListedShares;
+        }
+
+        // 희망 공모가 하단이 파싱된 경우에만 갱신
+        if (offerPriceMin != null) {
+            this.offerPriceMin = offerPriceMin;
+        }
+
+        // 희망 공모가 상단이 파싱된 경우에만 갱신
+        if (offerPriceMax != null) {
+            this.offerPriceMax = offerPriceMax;
+        }
+
+        // 확정 공모가가 파싱된 경우에만 갱신
+        if (offerPrice != null) {
+            this.offerPrice = offerPrice;
+        }
+    }
+
     // 청약 공고일, 배정 기준일 갱신 메서드
     public void updateOfferingDates(
             LocalDate subscriptionNoticeDate,
             LocalDate allocationBaseDate
     ) {
-        this.subscriptionNoticeDate = subscriptionNoticeDate;
-        this.allocationBaseDate = allocationBaseDate;
+        // 청약공고일이 null이 아닐 때만 갱신
+        if (subscriptionNoticeDate != null) {
+            this.subscriptionNoticeDate = subscriptionNoticeDate;
+        }
+
+        // 배정기준일이 null이 아닐 때만 갱신
+        if (allocationBaseDate != null) {
+            this.allocationBaseDate = allocationBaseDate;
+        }
     }
 }

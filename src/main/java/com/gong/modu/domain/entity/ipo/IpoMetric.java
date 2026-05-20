@@ -92,4 +92,27 @@ public class IpoMetric extends BaseTimeEntity {
         this.signalLevel = signalLevel;
         this.computedAt = computedAt;
     }
+
+    // 공시 원문 파싱으로 얻은 지표 값을 선택적으로 반영하는 메서드
+    public void updateParsedMetrics(
+            BigDecimal institutionalCompetitionRate,
+            BigDecimal lockupRatio,
+            BigDecimal protectiveCustodyRatio
+    ) {
+
+        // 기관경쟁률이 파싱된 경우에만 갱신
+        if (institutionalCompetitionRate != null) {
+            this.institutionalCompetitionRate = institutionalCompetitionRate;
+        }
+
+        // 의무보유확약 비율이 파싱된 경우에만 갱신
+        if (lockupRatio != null) {
+            this.lockupRatio = lockupRatio;
+        }
+
+        // 보호예수 비율이 파싱된 경우에만 갱신
+        if (protectiveCustodyRatio != null) {
+            this.protectiveCustodyRatio = protectiveCustodyRatio;
+        }
+    }
 }

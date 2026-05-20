@@ -152,4 +152,39 @@ public class IpoEvent extends BaseTimeEntity {
         this.marketType = marketType;
         this.mainReportRceptNo = mainReportRceptNo;
     }
+
+    // 공시 원문 파싱으로 얻은 일정 값만 선택적으로 반영하는 메서드
+    public void updateParsedSchedule(
+            LocalDate demandForecastStart,
+            LocalDate demandForecastEnd,
+            LocalDate refundDate,
+            LocalDate listingDate,
+            LocalDate lockupExpiryDate
+    ) {
+
+        // 파싱된 수요예측 시작일이 있을 때만 기존 값을 갱신
+        if (demandForecastStart != null) {
+            this.demandForecastStart = demandForecastStart;
+        }
+
+        // 파싱된 수요예측 종료일이 있을 때만 기존 값을 갱신
+        if (demandForecastEnd != null) {
+            this.demandForecastEnd = demandForecastEnd;
+        }
+
+        // 파싱된 환불일이 있을 때만 기존 값을 갱신
+        if (refundDate != null) {
+            this.refundDate = refundDate;
+        }
+
+        // 파싱된 상장일이 있을 때만 기존 값을 갱신
+        if (listingDate != null) {
+            this.listingDate = listingDate;
+        }
+
+        // 파싱된 보호예수 해제일이 있을 때만 기존 값을 갱신
+        if (lockupExpiryDate != null) {
+            this.lockupExpiryDate = lockupExpiryDate;
+        }
+    }
 }

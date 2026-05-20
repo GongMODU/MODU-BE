@@ -2,6 +2,7 @@ package com.gong.modu.scheduler;
 
 import com.gong.modu.domain.entity.ipo.Company;
 import com.gong.modu.repository.ipo.CompanyRepository;
+import com.gong.modu.service.pipeline.DartDisclosureParsingService;
 import com.gong.modu.service.pipeline.KisStockPriceSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,20 @@ public class ExternalDataScheduler {
 
     private final CompanyRepository companyRepository;
     private final KisStockPriceSyncService kisStockPriceSyncService; // 실제 KIS 주가 동기화 로직을 실행할 서비스
+
+    private final DartDisclosureParsingService dartDisclosureParsingService; // DART 공시 원문 다운/파싱 로직을 실행하는 서비스
+
+    @Scheduled(cron = "0 0 2 * * *")
+    public void parseUnparsedDartDisclosureDocuments() {
+        log.info("[Scheduler] DART 공시 원문 ZIP 파싱 시작");
+        try {
+            dartDisclosureParsingService.parseUnparsedDisclosureReports(20);
+        } catch (Exception e) {
+            log.error("[Scheduler] DART 공시 원문 ZIP 파싱 실패", e);
+        }
+
+        log.info("[Scheduler] DART 공시 원문 ZIP 파싱 종료");
+    }
 
 
     // 상장 기업들의 KIS 주가 뎅ㅣ터를 동기화하는 스케줄러 메서드

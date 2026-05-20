@@ -1,6 +1,7 @@
 package com.gong.modu.repository.ipo;
 
 import com.gong.modu.domain.entity.ipo.IpoDisclosureReport;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -20,4 +21,8 @@ public interface IpoDisclosureReportRepository extends JpaRepository<IpoDisclosu
 
     // 공시명에 특정 키워드가 포함된 공시 목록 조회
     List<IpoDisclosureReport> findByReportNameContaining(String keyword);
+
+    // original_text가 아직 없는 공시를 일부만 조회
+    List<IpoDisclosureReport> findByOriginalTextIsNull(Pageable pageable);
+
 }

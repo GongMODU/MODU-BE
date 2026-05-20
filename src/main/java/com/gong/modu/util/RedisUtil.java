@@ -16,6 +16,9 @@ public class RedisUtil {
     private static final String EMAIL_CODE_PREFIX = "email:code:";
     private static final String EMAIL_VERIFIED_PREFIX = "email:verified:";
 
+    private static final String DISCLOSURE_PARSE_LOCK_PREFIX = "lock:disclosure-parse:";
+    private static final String DISCLOSURE_PARSE_FAILED_PREFIX = "failed:disclosure-parse:";
+
     // 이메일 인증코드 저장 (TTL: 초 단위)
     public void saveEmailCode(String email, String code, long ttlSeconds) {
         redisTemplate.opsForValue()
@@ -79,5 +82,42 @@ public class RedisUtil {
     // 블랙리스트 여부 확인
     public boolean isBlacklisted(String accessToken) {
         return redisTemplate.hasKey(BLACKLIST_PREFIX + accessToken);
+    }
+
+    // 특정 공시 접수번호에 대해 파싱 lock을 획득
+    public boolean tryLockDisclosureParsing(String rceptNo, long ttlMinutes) {
+        Boolean result = redisTemplate.opsForValue()
+                .setIfAbsent(
+                        DISCLOSURE_PARSE_LOCK_PREFIX + rceptNo,
+                        "locked",
+                        Duration.ofMinutes(ttlMinutes)
+                );
+
+        return Boolean.TRUE.equals(result);
+    }
+
+    // 특정 공시 접수번호의 파싱 lock을 해제
+    // 파싱 성공 또는 실패 후 lock을 제거해 다음 실행에서 다시 처리 가능하게 함
+    public void unlockDisclosureParsing(String rceptNo) {
+        redisTemplate.delete(DISCLOSURE_PARSE_LOCK_PREFIX + rceptNo);
+    }
+
+    // 특정 공시 접수번호의 파싱 실패 기록을 저장
+    // 실패한 공시를 너무 자주 재시도하면 DART 호출과 서버 자원을 낭비하므로 짧게 막아둠
+    public void markDisclosureParsingFailed(String rceptNo, long ttlHours) {
+        redisTemplate.opsForValue()
+                .set(
+                        DISCLOSURE_PARSE_FAILED_PREFIX + rceptNo,
+                        "failed",
+                        Duration.ofHours(ttlHours)
+                );
+    }
+
+    // 특정 공시 접수번호가 최근 파싱 실패 상태인지 확인
+    // 실패 상태라면 이번 스케줄러에서는 건너뜀
+    public boolean isDisclosureParsingRecentlyFailed(String rceptNo) {
+        return Boolean.TRUE.equals(
+                redisTemplate.hasKey(DISCLOSURE_PARSE_FAILED_PREFIX + rceptNo)
+        );
     }
 }
