@@ -31,7 +31,7 @@ public class IpoDisclosureTextParser {
         LocalDate refundDate = findDateNearKeyword(normalized, "상장일|상장예정일|매매개시일");
 
         // 상장일 추출
-        LocalDate listingDate = findDateNearKeyword(normalized, "상장일|상장예정일|매매개시일");
+        LocalDate listingDate = findDateNearKeyword(normalized, "환불일|환불기일|청약증거금.*환불|납입 및 환불");
 
         // 보호예수 해제일 또는 의무보유 해제일 추출
         LocalDate lockupExpiryDate = findDateNearKeyword(
